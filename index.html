@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Wifey 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'Quicksand',sans-serif;
+  background:linear-gradient(135deg,#f8bcbc,#f9d5c3);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* FLOATING HEARTS & TULIPS */
+@keyframes floatUp{
+  0%{transform:translateY(0);opacity:0.9;}
+  100%{transform:translateY(-110vh);opacity:0;}
+}
+
+.floating{
+  position:fixed;
+  bottom:-30px;
+  font-size:22px;
+  animation:floatUp linear forwards;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* CUTE PASSWORD SCREEN */
+#lockScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(135deg,#f8bcbc,#f9d5c3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:10000;
+  text-align:center;
+}
+
+#lockScreen h2{
+  color:#e66b9a;
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+#annivInput{
+  padding:12px 20px;
+  border-radius:30px;
+  border:none;
+  width:220px;
+  font-size:16px;
+  text-align:center;
+  outline:none;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+#unlockBtn{
+  margin-top:15px;
+  background:linear-gradient(135deg,#f8a9c4,#e66b9a);
+  border:none;
+  padding:10px 25px;
+  border-radius:25px;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+#unlockBtn:hover{
+  transform:scale(1.05);
+}
+
+#errorMsg{
+  margin-top:10px;
+  color:#e66b9a;
+  font-size:14px;
+}
+
+/* PAGE SYSTEM */
+.page{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  min-height:100vh;
+  padding:90px 15px 40px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  opacity:0;
+  transform:translateX(30px);
+  pointer-events:none;
+  transition:all 0.4s ease;
+}
+
+.page.active{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
+}
+
+/* TOP BUTTONS */
+.home-btn{
+  position:fixed;
+  top:15px;
+  background:white;
+  border:none;
+  padding:8px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:14px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  z-index:1000;
+}
+.back{left:15px;}
+.home{left:100px;}
+
+/* CARD */
+.card{
+  background:#fff7f2;
+  width:100%;
+  max-width:650px;
+  padding:30px 25px;
+  border-radius:25px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.08);
+  text-align:center;
+}
+
+h1{
+  color:#e66b9a;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.letter-text{
+  color:#7a555d;
+  font-size:16px;
+  line-height:1.6;
+  text-align:left;
+}
+
+.letter-photo{
+  width:220px;
+  margin:20px auto;
+  display:block;
+  border-radius:18px;
+}
+
+.button{
+  background:#f8a9c4;
+  border:none;
+  padding:12px 25px;
+  margin:10px;
+  border-radius:25px;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.button:hover{
+  background:#e66b9a;
+  transform:scale(1.05);
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+.gallery img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:15px;
+  cursor:pointer;
+  transition:transform 0.3s ease;
+}
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s ease;
+  z-index:9998;
+}
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+.modal img{
+  max-width:90%;
+  max-height:85%;
+  border-radius:20px;
+}
+
+/* BOUNCING GIF */
+.bounce-gift{
+  position:fixed;
+  width:180px;
+  opacity:0.9;
+  z-index:9999;
+  pointer-events:auto;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD LOCK -->
+<div id="lockScreen">
+  <h2>Enter our anniversary date 💞🌷</h2>
+  <input id="annivInput" type="text" placeholder="Enter here 💗">
+  <button id="unlockBtn" onclick="checkPassword()">Unlock 💖</button>
+  <p id="errorMsg"></p>
+</div>
+
+<button class="home-btn back" onclick="goBack()">← Back</button>
+<button class="home-btn home" onclick="openPage('home')">🏠 Home</button>
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <div class="card">
+    <h1>Happy Valentine's Day Wifey/Mrs.Sistoso ☺️🌷</h1>
+    <button class="button" onclick="openPage('letter')">Open Letter 💌</button>
+  </div>
+</div>
+
+<!-- LETTER -->
+<div class="page" id="letter">
+  <div class="card">
+    <h1>Happy Valentine's Day, Wifey ☺️💞</h1>
+    <div class="letter-text">
+      <p>Happy Valentine's po, Wifey ☺️</p>
+      <p>It's our first Valentine's together!! 🌷🥰</p>
+      <p>Almost our monthsary again po 😊</p>
+      <p>I'm so proud of your hard work.</p>
+      <p>Tiis lang po ha? ☺️</p>
+      <p>I know you overthink sometimes,</p>
+      <p>but remember I'm yours only ☺️</p>
+      <p><strong>I LOVE YOU SO MUCH PO WIFEY!! 🥰🌷</strong></p>
+      <p>MWUAAA!!! 💞</p>
+      <p><strong>HAPPY VALENTINE'S!!!! ☺️🥰</strong></p>
+    </div>
+    <img src="us.jpg" class="letter-photo">
+    <button class="button" onclick="openPage('presents')">Next Surprise 🎁</button>
+  </div>
+</div>
+
+<!-- PRESENTS -->
+<div class="page" id="presents">
+  <div class="card">
+    <h1>Presents For You 🎁</h1>
+    <button class="button" onclick="openPage('photos')">Photos 📸</button>
+    <button class="button" onclick="openPage('music')">Music 🎵</button>
+  </div>
+</div>
+
+<!-- PHOTOS -->
+<div class="page" id="photos">
+  <div class="card">
+    <h1>Our Memories 📷</h1>
+    <div class="gallery">
+      <img src="pic1.jpg" onclick="openModal(this)">
+      <img src="pic2.jpg" onclick="openModal(this)">
+      <img src="pic3.jpg" onclick="openModal(this)">
+      <img src="pic4.jpg" onclick="openModal(this)">
+      <img src="pic5.jpg" onclick="openModal(this)">
+      <img src="pic6.jpg" onclick="openModal(this)">
+      <img src="pic7.jpg" onclick="openModal(this)">
+      <img src="pic8.jpg" onclick="openModal(this)">
+    </div>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div class="page" id="music">
+  <div class="card">
+    <h1>Our Songs 🎶</h1>
+
+    <iframe style="border-radius:12px"
+      src="https://open.spotify.com/embed/track/4rKbm8TTrhTLissRuSFo3Z"
+      width="100%" height="152"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+
+    <br><br>
+
+    <iframe style="border-radius:12px"
+      src="https://open.spotify.com/embed/track/1vrd6UOGamcKNGnSHJQlSt"
+      width="100%" height="152"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+
+  </div>
+</div>
+
+<div class="modal" id="imageModal" onclick="closeModal()">
+  <img id="modalImg">
+</div>
+
+<img src="gift.gif" class="bounce-gift" id="bounceGift" onclick="openPage('presents')">
+
+<script>
+let pageHistory=["home"];
+
+function openPage(pageId){
+  if(pageHistory[pageHistory.length-1]!==pageId){
+    pageHistory.push(pageId);
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  setTimeout(()=>{document.getElementById(pageId).classList.add('active');},50);
+}
+
+function goBack(){
+  if(pageHistory.length>1){
+    pageHistory.pop();
+    let prev=pageHistory[pageHistory.length-1];
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    setTimeout(()=>{document.getElementById(prev).classList.add('active');},50);
+  }
+}
+
+function openModal(img){
+  document.getElementById("modalImg").src=img.src;
+  document.getElementById("imageModal").classList.add("active");
+}
+
+function closeModal(){
+  document.getElementById("imageModal").classList.remove("active");
+}
+
+function checkPassword(){
+  const input=document.getElementById("annivInput").value.trim().toLowerCase();
+  if(input==="jan 1 2026"){
+    document.getElementById("lockScreen").style.display="none";
+  }else{
+    document.getElementById("errorMsg").innerText="Mali po Wifey!! 🥹";
+  }
+}
+
+/* FLOATING EMOJIS */
+const emojis=["💞","💗","🌷"];
+function createFloating(){
+  const el=document.createElement("div");
+  el.className="floating";
+  el.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+  el.style.left=Math.random()*100+"vw";
+  el.style.animationDuration=(4+Math.random()*3)+"s";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),7000);
+}
+setInterval(createFloating,800);
+
+/* BOUNCING GIFT */
+const gift=document.getElementById("bounceGift");
+let x=100,y=100,dx=3,dy=3;
+function animateGift(){
+  const width=window.innerWidth-gift.offsetWidth;
+  const height=window.innerHeight-gift.offsetHeight;
+  x+=dx; y+=dy;
+  if(x<=0||x>=width) dx=-dx;
+  if(y<=0||y>=height) dy=-dy;
+  gift.style.left=x+"px";
+  gift.style.top=y+"px";
+  requestAnimationFrame(animateGift);
+}
+animateGift();
+</script>
+
+</body>
+</html>
